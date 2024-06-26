@@ -15,4 +15,29 @@ class PageController extends Controller
     {
         return view('about');
     }
+
+    public function services()
+    {
+        return view('services');
+    }
+
+    public function projeck()
+    {
+        return view('project');
+    }
+
+    public function blog()
+    {
+        return view('blog');
+    }
+
+    public function contact()
+    {
+        return view('contact');
+    }
+
+    public function signal()
+    {
+        return view('signal');
+    }
 }
