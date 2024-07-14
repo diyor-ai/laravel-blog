@@ -24,7 +24,7 @@
     <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -34,7 +34,7 @@
             <div class="col-lg-3 bg-secondary d-none d-lg-block">
                 <a href=""
                     class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
-                    <h1 class="m-0 display-3 text-primary">Klean</h1>
+                    <h1 class="m-0 display-3 text-primary">Clean</h1>
                 </a>
             </div>
             <div class="col-lg-9">
