@@ -13,28 +13,6 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::create([
-            'user_id' => 1,
-            'title' => 'Abdulazimov Mukhammaddiyor',
-            'short_content' => 'qiqsa maqola yani short_content',
-            'content' => 'misol uchun content',
-            'photo' => null,
-        ]);
-
-        Post::create([
-            'user_id' => 1,
-            'title' => 'Abdulazimov Mukhammaddiyor',
-            'short_content' => 'qiqsa maqola yani short_content',
-            'content' => 'misol uchun content',
-            'photo' => null,
-        ]);
-
-        Post::create([
-            'user_id' => 1,
-            'title' => 'Abdulazimov Mukhammaddiyor',
-            'short_content' => 'qiqsa maqola yani short_content',
-            'content' => 'misol uchun content',
-            'photo' => null,
-        ]);
+        Post::factory()->count(10)->create();
     }
 }
