@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        // $this->middleware('auth');
+    }
     public function index()
     {
-        $posts = Post::paginate(9);
+        $posts = Post::paginate(3);
 
         return view('posts.index')->with('posts', $posts);
     }
