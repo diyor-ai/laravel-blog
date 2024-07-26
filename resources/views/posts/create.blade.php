@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="control-group mb-4">
-                        <select name="tag[]" class="form-control">
+                        <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="control-group mb-4">
-                        <select name="$tags_id" class="form-control" multiple>
+                        <select name="tags[]" multiple class="form-control">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                             @endforeach

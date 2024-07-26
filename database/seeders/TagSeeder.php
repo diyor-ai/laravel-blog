@@ -20,6 +20,6 @@ class TagSeeder extends Seeder
         ];
 
         Tag::insert($tags);
-
+ 
     }
 }

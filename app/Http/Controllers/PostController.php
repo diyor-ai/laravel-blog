@@ -6,21 +6,17 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth');
     }
     public function index()
     {
-        $posts = Post::paginate(3);
+        $posts = Post::paginate(6);
 
         return view('posts.index')->with('posts', $posts);
     }
@@ -50,7 +46,11 @@ class PostController extends Controller
             'photo' => $paht ?? null,
         ]);
 
-        if(isset())
+        if(isset($request->tags)){
+            foreach ($request->tags as $tag) {
+                $post->tags()->attach($tag);
+            }
+        }
 
         return redirect()->route('posts.index');
     }
@@ -63,6 +63,8 @@ class PostController extends Controller
                 ->get()
                 ->except($post->id)
                 ->take(5),
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
         ]);
     }
 
