@@ -34,6 +34,23 @@
                     </div>
 
                     <div class="control-group mb-4">
+                        <select name="category_id" class="form-control">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="control-group mb-4">
+                        <select name="tags[]" multiple class="form-control">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+                    <div class="control-group mb-4">
                         <textarea class="form-control p-4" rows="3" name="short_content" id="message" placeholder="Qisqacha Mazmuni">{{ old('short_content') }}</textarea>
                         @error('short_content')
                             <div class="alert text-danger">{{ $message }}</div>

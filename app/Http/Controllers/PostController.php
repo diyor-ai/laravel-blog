@@ -3,24 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Tag;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+    }
     public function index()
     {
-        $posts = Post::paginate(9);
+        $posts = Post::paginate(6);
 
         return view('posts.index')->with('posts', $posts);
     }
 
     public function create()
     {
-        return view('posts.create');
+        return view('posts.create')->with([
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
     }
 
     public function store(StorePostRequest $request)
@@ -32,11 +38,19 @@ class PostController extends Controller
         }
 
         $post = Post::create([
+            'user_id' => 1,
+            'category_id' => $request->category_id,
             'title' => $request->title,
             'short_content' => $request->short_content,
             'content' => $request->content,
             'photo' => $paht ?? null,
         ]);
+
+        if(isset($request->tags)){
+            foreach ($request->tags as $tag) {
+                $post->tags()->attach($tag);
+            }
+        }
 
         return redirect()->route('posts.index');
     }
@@ -49,6 +63,8 @@ class PostController extends Controller
                 ->get()
                 ->except($post->id)
                 ->take(5),
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
         ]);
     }
 

@@ -11,33 +11,31 @@
         <div class="w-60 py-5">
             <div class="contact-form" style="padding-left: 10%">
                 <div id="success"></div>
-                <form action="{{ route('posts.update',['post' => $post->id]) }}" method="POST"
+                <form action="{{ route('posts.update', ['post' => $post->id]) }}" method="POST"
                     enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
 
 
                     <div class="control-group mb-4">
-                        <input type="text" class="form-control p-4" id="subject" placeholder="Sarlavha" name="title"
-                            value="{{ $post->title}}" />
+                        <input type="text" class="form-control p-4" id="subject" placeholder="Sarlavha"
+                            name="title" value="{{ $post->title }}" />
                         @error('title')
-                        <div class="alert text-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="control-group mb-4">
-                        <textarea class="form-control p-4" rows="3" name="short_content" id="message"
-                            placeholder="Qisqacha Mazmuni">{{ $post->short_content }}</textarea>
+                        <textarea class="form-control p-4" rows="3" name="short_content" id="message" placeholder="Qisqacha Mazmuni">{{ $post->short_content }}</textarea>
                         @error('short_content')
-                        <div class="alert text-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="control-group mb-4">
-                        <textarea class="form-control p-4" rows="6" id="message" name="content"
-                            placeholder="Maqola">{{ $post->content}}</textarea>
+                        <textarea class="form-control p-4" rows="6" id="message" name="content" placeholder="Maqola">{{ $post->content }}</textarea>
                         @error('content')
-                        <div class="alert text-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -45,7 +43,7 @@
                         <input type="file" name="photo" class="form-control" placeholder="Rasm" />
 
                         @error('photo')
-                        <div class="alert text-danger">{{ $message }}</div>
+                            <div class="alert text-danger">{{ $message }}</div>
                         @enderror
 
                     </div>
