@@ -15,6 +15,10 @@
             <a href="{{ route('contact') }}" class="nav-item nav-link">Contact</a>
         </div>
         @auth
+            <div>
+                {{ auth()->user()->name }}
+                {{ auth()->user()->email }}
+            </div>
             <a href="{{ route('posts.create') }}" class="btn btn-primary mr-3 d-none d-lg-block">Post Yaratish</a>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf

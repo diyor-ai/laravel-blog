@@ -16,6 +16,8 @@ Route::get('contact', [PageController::class, 'contact'])->name('contact');
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::post('register', [AuthController::class, 'register_store'])->name('register.store');
 
 Route::resources([
     'posts' => PostController::class,
