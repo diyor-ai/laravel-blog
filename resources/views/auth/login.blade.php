@@ -31,11 +31,11 @@
                                 <label for="remember" class="text-muted">Eslab qolish </label>
                                 <a href="#" id="forgot" class="font-weight-bold">Parolni unutdizmi?</a>
                             </div>
-                            <button type="submit" class="btn btn-success btn-block mt-3">Kirish</button>
+                            <button type="submit" class="btn btn-warning btn-block mt-3">Kirish</button>
 
                             <div class="text-center pt-4 text-muted">
                                 Ro'yxatdan o'tkanmisiz?
-                                <a href="#">Ro'yxatdan o'tish</a>
+                                <a href="{{ route('register') }}">Ro'yxatdan o'tish</a>
                             </div>
                         </form>
                     </div>
