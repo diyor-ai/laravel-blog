@@ -33,13 +33,13 @@
                                     <span class="fas fa-lock px-2"></span>
                                     <input name="password_confirmation" type="password" placeholder="Parolni tasdiqlang"
                                         required>
+                                </div>
+                                <button type="submit" class="btn btn-warning btn-block mt-3">Jo'natish</button>
 
-                                    <button type="submit" class="btn btn-warning btn-block mt-3">Jo'natish</button>
-
-                                    <div class="text-center pt-4 text-muted">
-                                        Ro'yxatdan o'tkanmisiz?
-                                        <a href="{{ route('login') }}">Kirish</a>
-                                    </div>
+                                <div class="text-center pt-4 text-muted">
+                                    Ro'yxatdan o'tkanmisiz?
+                                    <a href="{{ route('login') }}">Kirish</a>
+                                </div>
                         </form>
                     </div>
                     <div class="mx-3 my-2 py-2 bordert">

@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\Models\User;
+use App\Policies\PostPolicy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Post::class, PostPolicy::class);
+
         Paginator::useBootstrapFour();
+
     }
+
 }
