@@ -6,13 +6,15 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('auth')->except(['index','show']);
     }
     public function index()
     {
@@ -38,7 +40,7 @@ class PostController extends Controller
         }
 
         $post = Post::create([
-            'user_id' => 1,
+            'user_id' => auth()->user()->id,
             'category_id' => $request->category_id,
             'title' => $request->title,
             'short_content' => $request->short_content,
@@ -70,11 +72,14 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        Gate::authorize('update', $post);
+
         return view('posts.edit')->with(['post' => $post]);
     }
 
     public function update(StorePostRequest $request, Post $post)
     {
+
         if ($request->hasFile('photo')) {
 
             if (isset($post->photo)) {
@@ -98,6 +103,8 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        Gate::authorize('update', $post);
+
         if (isset($post->photo)) {
             Storage::delete($post->photo);
         }
