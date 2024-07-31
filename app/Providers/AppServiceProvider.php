@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\PostCreated;
+use App\Listeners\SendEmailToUser;
+use App\Listeners\SendNotificationToAdmin;
 use App\Models\Post;
-use App\Models\User;
 use App\Policies\PostPolicy;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
