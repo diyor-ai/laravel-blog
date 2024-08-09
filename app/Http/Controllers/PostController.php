@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Events\PostCreated;
 use App\Http\Requests\StorePostRequest;
 use App\Jobs\ChangePost;
-use App\Jobs\UploadBigFile;
+use App\Mail\PostCreatedMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -25,14 +26,6 @@ class PostController extends Controller
         $posts = Post::paginate(6);
 
         return view('posts.index')->with('posts', $posts);
-    }
-
-    public function create()
-    {
-        return view('posts.create')->with([
-            'categories' => Category::all(),
-            'tags' => Tag::all(),
-        ]);
     }
 
     public function store(StorePostRequest $request)
@@ -61,7 +54,17 @@ class PostController extends Controller
 
         ChangePost::dispatch($post);
 
+        Mail::to($request->user())->later(now()->addMinute(1), (new PostCreatedMail($post))->onQueue('mails'));
+
         return redirect()->route('posts.index');
+    }
+
+    public function create()
+    {
+        return view('posts.create')->with([
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
     }
 
     public function show(Post $post)
