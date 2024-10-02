@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreated;
 use App\Http\Requests\StorePostRequest;
+use App\Jobs\ChangePost;
+use App\Mail\PostCreatedMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('auth')->except(['index', 'show']);
     }
+
     public function index()
     {
         $posts = Post::paginate(6);
@@ -23,18 +28,9 @@ class PostController extends Controller
         return view('posts.index')->with('posts', $posts);
     }
 
-    public function create()
-    {
-        return view('posts.create')->with([
-            'categories' => Category::all(),
-            'tags' => Tag::all(),
-        ]);
-    }
-
     public function store(StorePostRequest $request)
     {
         if ($request->hasFile('photo')) {
-
             $name = $request->file('photo')->getClientOriginalName();
             $paht = $request->file('photo')->storeAs('post-photos', $name);
         }
@@ -48,13 +44,27 @@ class PostController extends Controller
             'photo' => $paht ?? null,
         ]);
 
-        if(isset($request->tags)){
+        if (isset($request->tags)) {
             foreach ($request->tags as $tag) {
                 $post->tags()->attach($tag);
             }
         }
 
+        PostCreated::dispatch($post);
+
+        ChangePost::dispatch($post);
+
+        Mail::to($request->user())->later(now()->addMinute(1), (new PostCreatedMail($post))->onQueue('mails'));
+
         return redirect()->route('posts.index');
+    }
+
+    public function create()
+    {
+        return view('posts.create')->with([
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
     }
 
     public function show(Post $post)
@@ -79,9 +89,7 @@ class PostController extends Controller
 
     public function update(StorePostRequest $request, Post $post)
     {
-
         if ($request->hasFile('photo')) {
-
             if (isset($post->photo)) {
                 Storage::delete($post->photo);
             }
