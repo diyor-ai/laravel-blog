@@ -7,42 +7,41 @@ use Illuminate\Foundation\Http\FormRequest;
 class StorePostRequest extends FormRequest
 {
     /**
-     * Define user-friendly names for the attributes.
-     *
-     * @return array
+     * User-friendly attribute names for validation messages.
      */
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'title' => 'Sarlavha',
             'short_content' => 'Qisqacha mazmun',
-            'content' => 'Maq\'ola', // Added missing comma
-            'photo' => 'Rasm', // Added 'photo' attribute
+            'content' => 'Maqola',
+            'photo' => 'Rasm',
+            'category_id' => 'Kategoriya',
+            'tags' => 'Teglar',
         ];
     }
 
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
+     * Authorization is enforced by the `auth` middleware and PostPolicy.
      */
     public function authorize(): bool
     {
-        return true; // Allow all users to make this request
+        return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'title' => 'required|max:255', // Title is required and must not exceed 255 characters
-            'short_content' => 'required', // Short content is required
-            'content' => 'required', // Content is required
-            'photo' => 'nullable|image|max:2048',
+            'title' => ['required', 'string', 'max:255'],
+            'short_content' => ['required', 'string'],
+            'content' => ['required', 'string'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['integer', 'distinct', 'exists:tags,id'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

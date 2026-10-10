@@ -19,21 +19,43 @@
 
                     <div class="control-group mb-4">
                         <input type="text" class="form-control p-4" id="subject" placeholder="Sarlavha"
-                            name="title" value="{{ $post->title }}" />
+                            name="title" value="{{ old('title', $post->title) }}" />
                         @error('title')
                             <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="control-group mb-4">
-                        <textarea class="form-control p-4" rows="3" name="short_content" id="message" placeholder="Qisqacha Mazmuni">{{ $post->short_content }}</textarea>
+                        <select name="category_id" class="form-control">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" @selected((int) old('category_id', $post->category_id) === $category->id)>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="alert text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="control-group mb-4">
+                        <select name="tags[]" multiple class="form-control">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('tags', $post->tags->modelKeys())))>{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('tags.*')
+                            <div class="alert text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="control-group mb-4">
+                        <textarea class="form-control p-4" rows="3" name="short_content" id="message" placeholder="Qisqacha Mazmuni">{{ old('short_content', $post->short_content) }}</textarea>
                         @error('short_content')
                             <div class="alert text-danger">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="control-group mb-4">
-                        <textarea class="form-control p-4" rows="6" id="message" name="content" placeholder="Maqola">{{ $post->content }}</textarea>
+                        <textarea class="form-control p-4" rows="6" id="message" name="content" placeholder="Maqola">{{ old('content', $post->content) }}</textarea>
                         @error('content')
                             <div class="alert text-danger">{{ $message }}</div>
                         @enderror

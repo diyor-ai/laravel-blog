@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -17,7 +16,7 @@ class Post extends Model
         'title',
         'short_content',
         'content',
-        'photo'
+        'photo',
     ];
 
     public function user()
@@ -29,7 +28,6 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
 
     public function comments()
     {

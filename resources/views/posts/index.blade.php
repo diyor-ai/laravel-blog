@@ -23,8 +23,10 @@
                     <div class="col-lg-4 col-md-6 mb-5">
                         <div class="position-relative mb-4">
                             <a href="{{ route('posts.show', ['post' => $post->id]) }}">
-                                <img class="img-fluid rounded w-100" src="{{ asset('storage/' . $post->photo) }}"
-                                    alt="">
+                                @if ($post->photo)
+                                    <img class="img-fluid rounded w-100" src="{{ asset('storage/' . $post->photo) }}"
+                                        alt="">
+                                @endif
                             </a>
                             <div class="blog-date">
                                 <h4 class="font-weight-bold mb-n1">01</h4>

@@ -4,119 +4,107 @@ namespace App\Http\Controllers;
 
 use App\Events\PostCreated;
 use App\Http\Requests\StorePostRequest;
-use App\Jobs\ChangePost;
-use App\Mail\PostCreatedMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Routing\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
-class PostController extends Controller
+class PostController extends Controller implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        return [
+            new Middleware('auth', except: ['index', 'show']),
+        ];
     }
 
-    public function index()
+    public function index(): View
     {
-        $posts = Post::paginate(6);
+        $posts = Post::with(['category', 'tags'])->latest()->paginate(6);
 
-        return view('posts.index')->with('posts', $posts);
+        return view('posts.index', ['posts' => $posts]);
     }
 
-    public function store(StorePostRequest $request)
+    public function create(): View
     {
-        if ($request->hasFile('photo')) {
-            $name = $request->file('photo')->getClientOriginalName();
-            $paht = $request->file('photo')->storeAs('post-photos', $name);
-        }
+        return view('posts.create', [
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
+    }
 
-        $post = Post::create([
-            'user_id' => auth()->user()->id,
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'short_content' => $request->short_content,
-            'content' => $request->content,
-            'photo' => $paht ?? null,
+    public function store(StorePostRequest $request): RedirectResponse
+    {
+        $post = $request->user()->posts()->create([
+            ...$request->safe()->only(['category_id', 'title', 'short_content', 'content']),
+            // store() generates a hashed, collision-free file name.
+            'photo' => $request->file('photo')?->store('post-photos', 'public'),
         ]);
 
-        if (isset($request->tags)) {
-            foreach ($request->tags as $tag) {
-                $post->tags()->attach($tag);
-            }
-        }
+        $post->tags()->sync($request->input('tags', []));
 
         PostCreated::dispatch($post);
-
-        ChangePost::dispatch($post);
-
-        Mail::to($request->user())->later(now()->addMinute(1), (new PostCreatedMail($post))->onQueue('mails'));
 
         return redirect()->route('posts.index');
     }
 
-    public function create()
+    public function show(Post $post): View
     {
-        return view('posts.create')->with([
-            'categories' => Category::all(),
-            'tags' => Tag::all(),
-        ]);
-    }
+        $post->load(['user', 'category', 'tags', 'comments.user']);
 
-    public function show(Post $post)
-    {
-        return view('posts.show')->with([
+        return view('posts.show', [
             'post' => $post,
-            'recent_posts' => Post::latest()
-                ->get()
-                ->except($post->id)
-                ->take(5),
+            'recent_posts' => Post::with('category')
+                ->whereKeyNot($post->id)
+                ->latest()
+                ->take(5)
+                ->get(),
             'categories' => Category::all(),
             'tags' => Tag::all(),
         ]);
     }
 
-    public function edit(Post $post)
+    public function edit(Post $post): View
     {
         Gate::authorize('update', $post);
 
-        return view('posts.edit')->with(['post' => $post]);
+        return view('posts.edit', [
+            'post' => $post->load('tags'),
+            'categories' => Category::all(),
+            'tags' => Tag::all(),
+        ]);
     }
 
-    public function update(StorePostRequest $request, Post $post)
+    public function update(StorePostRequest $request, Post $post): RedirectResponse
     {
+        Gate::authorize('update', $post);
+
+        $data = $request->safe()->only(['category_id', 'title', 'short_content', 'content']);
+
         if ($request->hasFile('photo')) {
-            if (isset($post->photo)) {
-                Storage::delete($post->photo);
+            if ($post->photo) {
+                Storage::disk('public')->delete($post->photo);
             }
 
-            $name = $request->file('photo')->getClientOriginalName();
-            $name = $request->file('photo')->getClientOriginalName();
-            $paht = $request->file('photo')->storeAs('post-photos', $name);
+            $data['photo'] = $request->file('photo')->store('post-photos', 'public');
         }
 
-        $post->update([
-            'title' => $request->title,
-            'short_content' => $request->short_content,
-            'content' => $request->content,
-            'photo' => $paht ?? $post->photo,
-        ]);
+        $post->update($data);
+        $post->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('posts.show', ['post' => $post->id]);
+        return redirect()->route('posts.show', $post);
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-        Gate::authorize('update', $post);
+        Gate::authorize('delete', $post);
 
-        if (isset($post->photo)) {
-            Storage::delete($post->photo);
-        }
-
+        // Soft delete: the row is kept (restorable), so the photo is kept too.
         $post->delete();
 
         return redirect()->route('posts.index');

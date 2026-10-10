@@ -51,12 +51,14 @@
                     </div>
 
                     <div class="mb-5">
-                        <img class="img-fluid rounded w-100 mb-4" src="{{ asset('storage/' . $post->photo) }}"
-                            alt="Image">
+                        @if ($post->photo)
+                            <img class="img-fluid rounded w-100 mb-4" src="{{ asset('storage/' . $post->photo) }}"
+                                alt="Image">
+                        @endif
                         {{ $post->content }}
                     </div>
                     <div class="mb-5">
-                        <h3 class="mb-4 section-title">{{ $post->comments()->count() }} Izohlar</h3>
+                        <h3 class="mb-4 section-title">{{ $post->comments->count() }} Izohlar</h3>
 
                         @foreach ($post->comments as $comment)
                             <div class="media mb-4">
@@ -81,7 +83,10 @@
 
                                 <div class="form-group">
                                     <label for="message">Xabar *</label>
-                                    <textarea name="body" cols="30" rows="5" class="form-control"></textarea>
+                                    <textarea name="body" cols="30" rows="5" class="form-control">{{ old('body') }}</textarea>
+                                    @error('body')
+                                        <div class="alert text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <input type="hidden" name="post_id" value="{{ $post->id }}">
                                 <div class="form-group mb-0">
