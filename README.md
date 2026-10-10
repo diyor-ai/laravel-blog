@@ -90,4 +90,4 @@ Cleanup: the `$paht` typo, the `projeckt` route (now `projects`), a duplicated l
 
 ## License
 
-No license file has been chosen yet (`composer.json` inherits `MIT` from the Laravel skeleton). Third-party template assets under `public/` keep their original licenses.
+The application code is released under the [MIT License](LICENSE) © 2026 Mukhammaddiyor Abdulazimov. Third-party template assets under `public/` keep their original licenses.
