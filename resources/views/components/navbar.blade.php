@@ -10,7 +10,7 @@
             <a href="/" class="nav-item nav-link active">Bosh sahifa</a>
             <a href="{{ route('about') }}" class="nav-item nav-link">Biz haqimizda</a>
             <a href="{{ route('services') }}" class="nav-item nav-link">Xizmatlar</a>
-            <a href="{{ route('projeck') }}" class="nav-item nav-link">Projectlar</a>
+            <a href="{{ route('projects') }}" class="nav-item nav-link">Projectlar</a>
             <a href="{{ route('posts.index') }}" class="nav-item nav-link">Blog</a>
             <a href="{{ route('contact') }}" class="nav-item nav-link">Contact</a>
         </div>

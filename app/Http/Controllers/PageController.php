@@ -2,41 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PageController extends Controller
 {
-    public function main()
+    public function main(): View
     {
         return view('main');
     }
 
-    public function about()
+    public function about(): View
     {
         return view('about');
     }
 
-    public function services()
+    public function services(): View
     {
         return view('services');
     }
 
-    public function projeck()
+    public function projects(): View
     {
         return view('project');
     }
 
-    public function blog()
-    {
-        return view('blog');
-    }
-
-    public function contact()
+    public function contact(): View
     {
         return view('contact');
     }
 
-    public function signal()
+    public function signal(): View
     {
         return view('signal');
     }
