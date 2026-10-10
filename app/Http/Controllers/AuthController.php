@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -40,20 +39,21 @@ class AuthController extends Controller
             ->onlyInput('email');
     }
 
-    public function register_store( Request $request)
+    public function register_store(Request $request): RedirectResponse
     {
-       $validated = $request->validate([
-            'email' => 'required|email:rfc,dns|unique:users,email',
-            'name' => 'required',
-            'password' => 'required|min:8',
-            'password_confirmation' => 'required|same:password'
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            // `dns` is deliberately not used: it needs network access at validation time.
+            'email' => ['required', 'email:rfc', 'unique:users,email'],
+            'password' => ['required', 'min:8', 'confirmed'],
         ]);
-        $validated['password'] = Hash::make($validated['password']);
+
+        // The User model casts `password` as "hashed".
         $user = User::create($validated);
 
-        auth()->login($user);
+        Auth::login($user);
 
-        return redirect('/')->with('success', "Account successfully registered.");
+        return redirect('/')->with('success', 'Account successfully registered.');
     }
 
     public function logout(Request $request): RedirectResponse
