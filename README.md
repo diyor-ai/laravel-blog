@@ -20,7 +20,7 @@ The UI text is mostly Uzbek (it comes from the course) on top of a free HTML tem
 
 ## Stack
 
-PHP 8.2+ (8.3 in Docker), Laravel 11, Blade, Bootstrap 4 template, SQLite by default (MySQL in Docker), database queue, PHPUnit 11, Laravel Pint.
+PHP 8.2+ (CI runs on 8.3; Docker uses 8.3), Laravel 11, Blade, Bootstrap 4 template, SQLite by default (MySQL in Docker), database queue, PHPUnit 11, Laravel Pint.
 
 ## Running it
 
@@ -77,7 +77,6 @@ After the course, the code was reviewed and these problems were fixed (each with
 | **Demo `ChangePost` job overwrote every new post's photo path** with `bigFile/bigFile.zip`. | Removed, together with the unused `UploadBigFile` job. |
 | **Listeners did nothing but log, and were not actually queued** (`ShouldQueue` imported but not implemented). | One queued listener (`SendPostCreatedMail`) sends a queued `PostCreatedMail`; the log-only listeners were removed. |
 | **Registration**: `email:rfc,dns` needs network at validation time; the confirmation rule was hand-rolled. | `email:rfc` and Laravel's `confirmed` rule. |
-| Seeder contained a personal email and password. | Replaced by a demo user; the personal values were also scrubbed from the git history. |
 
 Cleanup: the `$paht` typo, the `projeckt` route (now `projects`), a duplicated line, the empty `EnsureTokenIsValid` middleware, the unused broadcast method and imports, empty controllers, `xxxx.blade.php`, and the dead `blog()` action. `show()` now queries only the 5 most recent posts instead of loading all of them, relations are eager-loaded to avoid N+1 queries, and the controller uses `HasMiddleware` instead of extending `Illuminate\Routing\Controller`.
 
@@ -86,9 +85,10 @@ Cleanup: the `$paht` typo, the `projeckt` route (now `projects`), a duplicated l
 - Learning project: no email verification, rate limiting on login, password reset, roles/admin, or search.
 - Soft-deleted posts can only be restored through code/console; there is no UI for it.
 - Photos are validated by type and size but are not resized or scanned.
+- Laravel 11 is no longer maintained: the locked `laravel/framework` v11.57.0 is the last 11.x release and `composer audit` reports four advisories that are only fixed in 12.x/13.x (including a CRLF issue in the default `email` validation rule, which the registration form uses). Upgrade the framework before any real use.
 - Laravel Horizon is installed, but it only works with the Redis queue; the default queue is `database`.
 - Most of the UI is an unmodified free HTML template ("Klean" by [HTML Codex](https://htmlcodex.com), credit kept in the footer) with Uzbek text; its images and libraries keep their own licenses. The page content (about, services, ...) is placeholder text.
-- Developed against PHP 8.3 (CI target). Docker setup is provided but was only validated with `docker compose config`, not exercised end to end.
+- `composer.lock` is resolved for PHP 8.2 so it installs on 8.2–8.5; the test suite is run on PHP 8.5 locally and on 8.3 in CI. Docker setup is provided but was only validated with `docker compose config`, not exercised end to end.
 
 ## License
 

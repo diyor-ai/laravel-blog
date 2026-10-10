@@ -8,6 +8,7 @@ use App\Mail\PostCreatedMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Events\CallQueuedListener;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
@@ -50,7 +51,7 @@ class PostCreatedFlowTest extends TestCase
 
         $this->createPostRequest(User::factory()->create());
 
-        Queue::assertPushedOn('mails', \Illuminate\Events\CallQueuedListener::class, function ($job) {
+        Queue::assertPushedOn('mails', CallQueuedListener::class, function ($job) {
             return $job->class === SendPostCreatedMail::class;
         });
     }
