@@ -10,46 +10,22 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PostCreatedMail extends Mailable
+class PostCreatedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $post;
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(Post $post)
+    public function __construct(public Post $post)
     {
-        $this->post = $post;
+        $this->onQueue('mails');
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            subject: 'Post Created Mail',
-        );
+        return new Envelope(subject: 'Your post was created');
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
-        return new Content(
-            view: 'mails.post-created',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return new Content(view: 'mails.post-created');
     }
 }
