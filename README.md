@@ -1,5 +1,7 @@
 # Laravel Blog
 
+[![CI](https://github.com/diyor-ai/laravel-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/diyor-ai/laravel-blog/actions/workflows/ci.yml)
+
 A small multi-user blog built with **Laravel 11**. It was built while following a Laravel 11 course, then reviewed and hardened: the authorization, validation, upload and queue code was audited, the bugs found were fixed, and a feature-test suite was added.
 
 > **This is a learning project, not production software.** See [Limitations](#limitations).
