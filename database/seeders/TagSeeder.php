@@ -12,7 +12,7 @@ class TagSeeder extends Seeder
     {
         $tags = [
             ['name' => 'Design'],
-            ['name' => 'Devolopment'],
+            ['name' => 'Development'],
             ['name' => 'Marketing'],
             ['name' => 'SEO'],
             ['name' => 'Writing'],

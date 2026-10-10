@@ -17,3 +17,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-journal
+/laravel
+/storage/app/public/*
+!/storage/app/public/.gitignore
