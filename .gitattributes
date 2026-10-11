@@ -9,3 +9,8 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Bundled front-end template assets: keep them out of GitHub's language stats
+public/lib/** linguist-vendored
+public/js/** linguist-vendored
+public/css/** linguist-vendored
